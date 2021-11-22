@@ -108,18 +108,18 @@ Default:
 ### event_targets
 Specifies event targets that will be used wit this EB rule.
 Current support only for:
-  * Lambda
-  * Step function
-  * ECS task - [special config requirements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#ecs_target)
-  * SNS
+* Lambda
+* Step function
+* ECS task - [special config requirements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#ecs_target)
+* SNS
 
 Each has these basic atributes:
-  * **arn** - ARN of the target resource
-  * **input** - specifying fixed JSON that will be sent to the target, conflicts with `input_path` and `input_transformer`
-  * **input_path** - use if we don't want to use fixed JSON in input, conflicts with `input` and `input_transformer`
-  * **input_transformer** - gives input to target based on on event data, conflicts with `input` and `input_path`
-  * **retry policy** - if you need to change default one(24h, 185x) - [configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#retry_policy)
-  * **dead_letter_config** - if we need to use deadletter SQS queue for failed events - [configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#dead_letter_config)
+* **arn** - ARN of the target resource
+* **input** - specifying fixed JSON that will be sent to the target, conflicts with `input_path` and `input_transformer`
+* **input_path** - use if we don't want to use fixed JSON in input, conflicts with `input` and `input_transformer`
+* **input_transformer** - gives input to target based on on event data, conflicts with `input` and `input_path`
+* **retry policy** - if you need to change default one(24h, 185x) - [configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#retry_policy)
+* **dead_letter_config** - if we need to use deadletter SQS queue for failed events - [configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#dead_letter_config)
 
 ```json
 "event_targets": <map of all event targets and their configuration>
