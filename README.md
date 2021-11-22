@@ -195,7 +195,6 @@ module "eventbridge_rule" {
 ```
 
 Basic
-####
 ```json
 {
   "name": "test-eb-rule",
