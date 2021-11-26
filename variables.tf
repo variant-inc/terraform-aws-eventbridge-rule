@@ -24,6 +24,13 @@ variable "event_bus_name" {
 variable "schedule_expression" {
   description = "The scheduling expression. For example, cron(0 20 * * ? *) or rate(5 minutes)."
   type        = string
+  default     = ""
+}
+
+variable "event_pattern" {
+  description = "Map which will be cast to JSON showing event pattern for matching events."
+  type        = any
+  default     = {}
 }
 
 variable "role_arn" {

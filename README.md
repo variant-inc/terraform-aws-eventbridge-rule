@@ -8,6 +8,7 @@
     - [description](#description)
     - [event_bus_name](#event_bus_name)
     - [schedule_expression](#schedule_expression)
+    - [event_pattern](#event_pattern)
     - [role_arn](#role_arn)
     - [is_enabled](#is_enabled)
     - [event_targets](#event_targets)
@@ -26,6 +27,7 @@
 | description | string | "" | "test eventbridge rule" |  |
 | event_bus_name | string | "default" | "test-custom-eventubus" |  |
 | schedule_expression | string | "" | rate(5 minutes) | <https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html> |
+| event_pattern | any | {} | ```{ "detail-type": [ "AWS Console Sign In via CloudTrail" ]}``` | |
 | role_arn | string | "" | "arn:aws:iam::319244236588:role/test-eb-role" |  |
 | is_enabled | bool | false | true |  |
 | event_targets | any | {} | `see below` |  |
@@ -78,10 +80,28 @@ In case we're using scheduled triggering. Supports cron and rate expressions.
 cron: `"cron(5,35 14 * * ? *)"`
 rate: `rate(5 minutes)`
 <https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html>
+> :warning: can't be used together with `event_pattern`
 ```json
 "schedule_expression": "<cron or rate expression>"
 ```
 
+Default:
+```json
+"schedule_expression": ""
+```
+### event_pattern
+In case we want to use event patterns instead of scheduled expression.
+<https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-events.html>
+> :warning: can't be used together with `schedule_expression`
+
+```json
+"event_pattern": {<map that will be cast to JSON>}
+```
+
+Default:
+```json
+"event_pattern": {}
+```
 ### role_arn
 Specifies ARN of preconfigured role which has access to all specified targets.
 If not specified new IAM Role is automatically created.
@@ -142,6 +162,7 @@ module "eventbridge_rule" {
 
   event_bus_name      = var.event_bus_name
   schedule_expression = var.schedule_expression
+  event_pattern       = var.event_pattern
   role_arn            = var.role_arn
   is_enabled          = var.is_enabled
   event_targets       = var.event_targets
