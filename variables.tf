@@ -33,8 +33,20 @@ variable "event_pattern" {
   default     = {}
 }
 
-variable "role_arn" {
-  description = "ARN of the role that is used for target invocation."
+variable "create_role" {
+  description = "Specifies should role be created with module or will there be external one provided."
+  type        = bool
+  default     = true
+}
+
+variable "policy" {
+  description = "List of additional policies for EB rule access."
+  type        = list(any)
+  default     = []
+}
+
+variable "role" {
+  description = "Custom role ARN used for target invocations."
   type        = string
   default     = ""
 }

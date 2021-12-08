@@ -9,7 +9,9 @@
     - [event_bus_name](#event_bus_name)
     - [schedule_expression](#schedule_expression)
     - [event_pattern](#event_pattern)
-    - [role_arn](#role_arn)
+    - [create_role](#create_role)
+    - [policy](#policy)
+    - [role](#role)
     - [is_enabled](#is_enabled)
     - [event_targets](#event_targets)
   - [Examples](#examples)
@@ -28,7 +30,9 @@
 | event_bus_name | string | "default" | "test-custom-eventubus" |  |
 | schedule_expression | string | "" | rate(5 minutes) | <https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html> |
 | event_pattern | any | {} | ```{ "detail-type": [ "AWS Console Sign In via CloudTrail" ]}``` | |
-| role_arn | string | "" | "arn:aws:iam::319244236588:role/test-eb-role" |  |
+| create_role | bool | true | false |  |
+| policy | list(any) | [] | `see below` |  |
+| role | string | "" | "arn:aws:iam::319244236588:role/test-eb-rule-role" |  |
 | is_enabled | bool | false | true |  |
 | event_targets | any | {} | `see below` |  |
 
@@ -102,16 +106,40 @@ Default:
 ```json
 "event_pattern": {}
 ```
-### role_arn
-Specifies ARN of preconfigured role which has access to all specified targets.
-If not specified new IAM Role is automatically created.
+### create_role
+Specifies if IAM role for the EB rule target invocation will be created in module or externally.
+`true` - created with module
+`false` - created externally
 ```json
-"role_arn": "<arn of preconfigured role>"
+"create_role": <true or false>
 ```
 
 Default:
 ```json
-"role_arn": ""
+"create_role": true
+```
+
+### policy
+Additional inline policy statements for EB rule role.
+Effective only if `create_role` is set to `true`.
+```json
+"policy": [<list of inline policies>]
+```
+
+Default:
+```json
+"policy": []
+```
+
+### role
+ARN of externally created role. Use in case of `create_role` is set to `false`.
+```json
+"role": "<role ARN>"
+```
+
+Default:
+```json
+"role": ""
 ```
 
 ### is_enabled
@@ -163,9 +191,12 @@ module "eventbridge_rule" {
   event_bus_name      = var.event_bus_name
   schedule_expression = var.schedule_expression
   event_pattern       = var.event_pattern
-  role_arn            = var.role_arn
   is_enabled          = var.is_enabled
   event_targets       = var.event_targets
+
+  create_role = var.create_role
+  policy      = var.policy
+  role        = var.role
 }
 ```
 
@@ -176,7 +207,8 @@ module "eventbridge_rule" {
   "name_is_prefix": false,
   "description": "test EB rule",
   "schedule_expression": "rate(5 minutes)",
-  "role_arn": "arn:aws:iam::319244236588:role/test-eb-rule-role",
+  "create_role": false,
+  "role": "arn:aws:iam::319244236588:role/test-eb-rule-role",
   "is_enabled": false,
   "event_targets": {
     "target-lambda-test": {

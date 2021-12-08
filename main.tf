@@ -15,7 +15,7 @@ resource "aws_cloudwatch_event_rule" "rule" {
   schedule_expression = length(var.schedule_expression) != 0 ? var.schedule_expression : null
   event_pattern = length(var.event_pattern) != 0 ? jsonencode(var.event_pattern) : null
 
-  role_arn   = try(length(var.role_arn), "") != 0 ? var.role_arn : aws_iam_role.eventbridge_rule_role[0].arn
+  role_arn   = var.create_role ? aws_iam_role.eventbridge_rule_role[0].arn : var.role_arn
   is_enabled = var.is_enabled
 }
 
@@ -89,7 +89,7 @@ resource "aws_cloudwatch_event_target" "target" {
 }
 
 resource "aws_iam_role" "eventbridge_rule_role" {
-  count = length(var.role_arn) == 0 ? 1 : 0
+  count = var.create_role ? 1 : 0
   name  = format("EventBridge-rule-%s", var.name)
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -184,6 +184,15 @@ resource "aws_iam_role" "eventbridge_rule_role" {
           }
         ]
       })
+    }
+  }
+
+  dynamic "inline_policy" {
+    for_each = var.policy
+
+    content {
+      name   = lookup(inline_policy.value, "name", "")
+      policy = jsonecode(lookup(inline_policy.value, "policy", {}))
     }
   }
 }
