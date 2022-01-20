@@ -15,7 +15,7 @@ resource "aws_cloudwatch_event_rule" "rule" {
   schedule_expression = length(var.schedule_expression) != 0 ? var.schedule_expression : null
   event_pattern = length(var.event_pattern) != 0 ? jsonencode(var.event_pattern) : null
 
-  role_arn   = var.create_role ? aws_iam_role.eventbridge_rule_role[0].arn : var.role_arn
+  role_arn   = var.create_role ? aws_iam_role.eventbridge_rule_role[0].arn : var.role
   is_enabled = var.is_enabled
 }
 
