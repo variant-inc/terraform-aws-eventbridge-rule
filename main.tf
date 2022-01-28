@@ -24,6 +24,7 @@ resource "aws_cloudwatch_event_target" "target" {
 
   rule           = aws_cloudwatch_event_rule.rule.id
   target_id      = each.key
+  tags           = var.tags
   arn            = lookup(each.value, "arn", null)
   event_bus_name = aws_cloudwatch_event_rule.rule.event_bus_name
   role_arn       = contains(local.attach_role_arns, lookup(each.value, "arn", null)) ? aws_cloudwatch_event_rule.rule.role_arn : null
@@ -91,6 +92,7 @@ resource "aws_cloudwatch_event_target" "target" {
 resource "aws_iam_role" "eventbridge_rule_role" {
   count = var.create_role ? 1 : 0
   name  = format("EventBridge-rule-%s", var.name)
+  tags  = var.tags
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

@@ -6,6 +6,7 @@
     - [name](#name)
     - [name_is_prefix](#name_is_prefix)
     - [description](#description)
+    - [tags](#tags)
     - [event_bus_name](#event_bus_name)
     - [schedule_expression](#schedule_expression)
     - [event_pattern](#event_pattern)
@@ -27,6 +28,7 @@
 | name | string |  | "ebrule-test" |  |
 | name_is_prefix | bool | false | true |  |
 | description | string | "" | "test eventbridge rule" |  |
+| tags | map(string) | {} | {"environment": "prod"} | |
 | event_bus_name | string | "default" | "test-custom-eventubus" |  |
 | schedule_expression | string | "" | rate(5 minutes) | <https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/ScheduledEvents.html> |
 | event_pattern | any | {} | ```{ "detail-type": [ "AWS Console Sign In via CloudTrail" ]}``` | |
@@ -65,6 +67,12 @@ Description for EB rule.
 Default:
 ```json
 "description": ""
+```
+
+### tags
+Tags for created bucket.
+```json
+"tags": {<map of tag keys and values>}
 ```
 
 ### event_bus_name
@@ -187,6 +195,7 @@ module "eventbridge_rule" {
   name           = var.name
   name_is_prefix = var.name_is_prefix
   description    = var.description
+  tags           = var.tags
 
   event_bus_name      = var.event_bus_name
   schedule_expression = var.schedule_expression
@@ -206,6 +215,9 @@ module "eventbridge_rule" {
   "name": "test-eb-rule",
   "name_is_prefix": false,
   "description": "test EB rule",
+  "tags": {
+    "environment": "prod"
+  },
   "schedule_expression": "rate(5 minutes)",
   "create_role": false,
   "role": "arn:aws:iam::319244236588:role/test-eb-rule-role",

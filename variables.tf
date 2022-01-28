@@ -15,6 +15,12 @@ variable "description" {
   default     = ""
 }
 
+variable "tags" {
+  type        = map(string)
+  description = "Tags for S3 bucket"
+  default     = {}
+}
+
 variable "event_bus_name" {
   description = "Name of the event bus"
   type        = string
