@@ -24,7 +24,6 @@ resource "aws_cloudwatch_event_target" "target" {
 
   rule           = aws_cloudwatch_event_rule.rule.id
   target_id      = each.key
-  tags           = var.tags
   arn            = lookup(each.value, "arn", null)
   event_bus_name = aws_cloudwatch_event_rule.rule.event_bus_name
   role_arn       = contains(local.attach_role_arns, lookup(each.value, "arn", null)) ? aws_cloudwatch_event_rule.rule.role_arn : null
