@@ -10,6 +10,7 @@ resource "aws_cloudwatch_event_rule" "rule" {
   name           = var.name_is_prefix ? null : var.name
   name_prefix    = var.name_is_prefix ? var.name : null
   description    = var.description
+  tags           = var.tags 
   event_bus_name = length(var.event_bus_name) != 0 ? var.event_bus_name : "default"
 
   schedule_expression = length(var.schedule_expression) != 0 ? var.schedule_expression : null
