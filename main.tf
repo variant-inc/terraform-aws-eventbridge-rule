@@ -29,7 +29,7 @@ resource "aws_cloudwatch_event_target" "target" {
   event_bus_name = aws_cloudwatch_event_rule.rule.event_bus_name
   role_arn       = contains(local.attach_role_arns, lookup(each.value, "arn", null)) ? aws_cloudwatch_event_rule.rule.role_arn : null
 
-  input      = jsonencode(lookup(each.value, "input", null))
+  input      = lookup(each.value, "input", null) != null ? jsonencode(lookup(each.value, "input", "")) : null
   input_path = lookup(each.value, "input_path", null)
   dynamic "input_transformer" {
     for_each = lookup(each.value, "input_transformer", null) != null ? [
