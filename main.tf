@@ -106,6 +106,8 @@ resource "aws_iam_role" "eventbridge_rule_role" {
     ]
   })
 
+  managed_policy_arns = var.managed_policies
+
   dynamic "inline_policy" {
     for_each = length(local.ecs_target_arns) != 0 ? [true] : []
     content {

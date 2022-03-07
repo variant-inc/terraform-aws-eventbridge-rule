@@ -12,6 +12,7 @@
     - [event_pattern](#event_pattern)
     - [create_role](#create_role)
     - [policy](#policy)
+    - [managed_policies](#managed_policies)
     - [role](#role)
     - [is_enabled](#is_enabled)
     - [event_targets](#event_targets)
@@ -34,6 +35,7 @@
 | event_pattern | any | {} | ```{ "detail-type": [ "AWS Console Sign In via CloudTrail" ]}``` | |
 | create_role | bool | true | false |  |
 | policy | list(any) | [] | `see below` |  |
+| managed_policies | list(string) | [] | `see below` |  |
 | role | string | "" | "arn:aws:iam::319244236588:role/test-eb-rule-role" |  |
 | is_enabled | bool | false | true |  |
 | event_targets | any | {} | `see below` |  |
@@ -139,6 +141,18 @@ Default:
 "policy": []
 ```
 
+### managed_policies
+Additional managed policies which should be attached to auto-created role.
+Effective only if `create_role` is set to `true`.
+```json
+"managed_policies": [<list of managed policies>]
+```
+
+Default:
+```json
+"managed_policies": []
+```
+
 ### role
 ARN of externally created role. Use in case of `create_role` is set to `false`.
 ```json
@@ -203,9 +217,10 @@ module "eventbridge_rule" {
   is_enabled          = var.is_enabled
   event_targets       = var.event_targets
 
-  create_role = var.create_role
-  policy      = var.policy
-  role        = var.role
+  create_role      = var.create_role
+  policy           = var.policy
+  managed_policies = var.managed_policies
+  role             = var.role
 }
 ```
 
@@ -218,6 +233,9 @@ module "eventbridge_rule" {
   "tags": {
     "environment": "prod"
   },
+  "managed_policies": [
+    "arn:aws:iam::319244236588:policy/example-managed-policy"
+  ],
   "schedule_expression": "rate(5 minutes)",
   "create_role": false,
   "role": "arn:aws:iam::319244236588:role/test-eb-rule-role",
