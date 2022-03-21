@@ -196,7 +196,7 @@ resource "aws_iam_role" "eventbridge_rule_role" {
 
     content {
       name   = lookup(inline_policy.value, "name", "")
-      policy = jsonecode(lookup(inline_policy.value, "policy", {}))
+      policy = jsonencode(lookup(inline_policy.value, "policy", {}))
     }
   }
 }
