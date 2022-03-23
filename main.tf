@@ -91,7 +91,7 @@ resource "aws_cloudwatch_event_target" "target" {
 
 resource "aws_iam_role" "eventbridge_rule_role" {
   count = var.create_role ? 1 : 0
-  name  = format("EventBridge-rule-%s", var.name)
+  name  = substr(format("EventBridge-rule-%s", var.name), 0, 64)
   tags  = var.tags
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
