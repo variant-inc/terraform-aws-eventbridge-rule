@@ -1,7 +1,8 @@
 locals {
-  attach_role_arns         = concat(local.ecs_target_arns, local.stepfunction_target_arns)
+  attach_role_arns         = concat(local.ecs_target_arns, local.stepfunction_target_arns, local.firehose_target_arns)
   ecs_target_arns          = [for k, v in var.event_targets : v.arn if contains(keys(v), "ecs_target")]
   stepfunction_target_arns = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "stateMachine")]
+  firehose_target_arns     = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "firehose")]
   lambda_target_arns       = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "lambda")]
   sns_target_arns          = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "sns")]
 }
