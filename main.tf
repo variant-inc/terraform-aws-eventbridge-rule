@@ -23,7 +23,7 @@ resource "aws_cloudwatch_event_rule" "rule" {
 resource "aws_cloudwatch_event_target" "target" {
   for_each = var.event_targets
 
-  rule           = aws_cloudwatch_event_rule.rule.id
+  rule           = aws_cloudwatch_event_rule.rule.name
   target_id      = each.key
   arn            = lookup(each.value, "arn", null)
   event_bus_name = aws_cloudwatch_event_rule.rule.event_bus_name
