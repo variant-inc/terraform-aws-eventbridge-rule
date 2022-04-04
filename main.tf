@@ -5,6 +5,7 @@ locals {
   firehose_target_arns     = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "firehose")]
   lambda_target_arns       = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "lambda")]
   sns_target_arns          = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "sns")]
+  sqs_target_arns          = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "sqs")]
 }
 
 resource "aws_cloudwatch_event_rule" "rule" {
@@ -186,6 +187,24 @@ resource "aws_iam_role" "eventbridge_rule_role" {
             "Effect"   = "Allow"
             "Action"   = ["SNS:Publish"]
             "Resource" = local.sns_target_arns
+          }
+        ]
+      })
+    }
+  }
+
+  dynamic "inline_policy" {
+    for_each = length(local.sns_target_arns) != 0 ? [true] : []
+    content {
+      name = "eb-rule-sqs-policy"
+      policy = jsonencode({
+        "Version" = "2012-10-17",
+        "Statement" = [
+          {
+            "Sid"      = "sqsAccess"
+            "Effect"   = "Allow"
+            "Action"   = ["sqs:SendMessage"]
+            "Resource" = local.sqs_target_arns
           }
         ]
       })
