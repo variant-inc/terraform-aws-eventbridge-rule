@@ -182,6 +182,7 @@ Current support only for:
 * Step function
 * ECS task - [special config requirements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_event_target#ecs_target)
 * SNS
+* SQS
 
 Each has these basic atributes:
 * **arn** - ARN of the target resource
