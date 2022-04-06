@@ -213,7 +213,7 @@ resource "aws_iam_role" "eventbridge_rule_role" {
   }
 
   dynamic "inline_policy" {
-    for_each = length(local.sqs_target_arns) != 0 ? [true] : []
+    for_each = length(local.eb_bus_target_arns) != 0 ? [true] : []
     content {
       name = "eb-rule-bus-policy"
       policy = jsonencode({
