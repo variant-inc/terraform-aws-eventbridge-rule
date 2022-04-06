@@ -6,6 +6,7 @@ locals {
   lambda_target_arns       = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "lambda")]
   sns_target_arns          = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "sns")]
   sqs_target_arns          = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "sqs")]
+  eb_bus_target_arns       = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "event-bus")]
 }
 
 resource "aws_cloudwatch_event_rule" "rule" {
@@ -205,6 +206,24 @@ resource "aws_iam_role" "eventbridge_rule_role" {
             "Effect"   = "Allow"
             "Action"   = ["sqs:SendMessage"]
             "Resource" = local.sqs_target_arns
+          }
+        ]
+      })
+    }
+  }
+
+  dynamic "inline_policy" {
+    for_each = length(local.sqs_target_arns) != 0 ? [true] : []
+    content {
+      name = "eb-rule-bus-policy"
+      policy = jsonencode({
+        "Version" = "2012-10-17",
+        "Statement" = [
+          {
+            "Sid"      = "eventbusAccess"
+            "Effect"   = "Allow"
+            "Action"   = ["events:PutEvents"]
+            "Resource" = local.eb_bus_target_arns
           }
         ]
       })
