@@ -6,7 +6,7 @@ locals {
   lambda_target_arns       = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "lambda")]
   sns_target_arns          = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "sns")]
   sqs_target_arns          = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "sqs")]
-  eb_bus_target_arns       = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "event-bus")]
+  eb_bus_target_arns       = [for k, v in var.event_targets : v.arn if contains(split(":", v.arn), "events")]
 }
 
 resource "aws_cloudwatch_event_rule" "rule" {
